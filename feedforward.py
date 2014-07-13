@@ -20,6 +20,8 @@ class FeedForward(object):
     def _activation_function_factory(self, name):
         if name == 'identity':
             return lambda x:x
+        if name == 'heaviside':
+            return lambda  x: 1 if x >= 0 else 0
         # TODO: Add sigmoid and arctan
 
     def set_edge_weight(self, a, b, weight):
