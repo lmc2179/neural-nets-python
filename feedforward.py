@@ -22,7 +22,7 @@ class FeedForward(object):
             return lambda x:x
         if name == 'heaviside':
             return lambda  x: 1 if x >= 0 else 0
-        # TODO: Add sigmoid and arctan
+        # TODO: Add sigmoid, arctan,
 
     def set_edge_weight(self, a, b, weight):
         self.network.edge[a][b]['w'] = weight
@@ -71,5 +71,6 @@ def test_calculate_node_hidden_layer():
     print result
     assert result == [4.0]
 
-test_calculate_node_single_layer()
-test_calculate_node_hidden_layer()
+if __name__ == '__main__':
+    test_calculate_node_single_layer()
+    test_calculate_node_hidden_layer()
