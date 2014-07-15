@@ -33,6 +33,14 @@ class Winnow(SingleLayerOnline):
         w = self.get_edge_weight(self.network_inputs[weight_index], self.network_outputs[0])
         self.set_edge_weight(self.network_inputs[weight_index], self.network_outputs[0], w*2.0)
 
+class Perceptron(SingleLayerOnline):
+    def _update(self, x, y):
+        predicted_value = self.evaluate_pattern(x)[0]
+        if predicted_value != y:
+            coeff = 1 if predicted_value == 1 else -1
+            weights = self.get_all_weights()
+            [self.set_edge_weight(input_name, self.network_outputs[0], w - coeff*x[i])
+             for i, (input_name, w) in enumerate(zip(self.network_inputs, weights))]
 
 def test_winnow():
     net = Winnow(2)
@@ -41,5 +49,13 @@ def test_winnow():
     net.fit(test_inputs, test_outputs)
     print net.get_all_weights()
 
+def test_perceptron():
+    net = Perceptron(2)
+    test_inputs = [(0, 1), (1, 1), (1, 0), (0, 0)] * 10
+    test_outputs = [1, 1, 0, 0] * 10
+    net.fit(test_inputs, test_outputs)
+    print net.get_all_weights()
+
 if __name__ == '__main__':
     test_winnow()
+    test_perceptron()
