@@ -25,7 +25,7 @@ class Multilayer(feedforward.FeedForward):
         [self.add_node(i, 'none') for i in self.network_inputs]
         [self.add_node(o, 'identity') for o in self.network_outputs]
         [self.add_node(h, 'logistic') for hidden_layer in self.hidden_layers for h in hidden_layer]
-        
+
     def _connect_layers(self, layer_1, layer_2):
         from itertools import product
         [self.set_edge_weight(a,b, self._get_default_edge_weight()) for a,b in product(layer_1, layer_2)]
