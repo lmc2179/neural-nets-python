@@ -1,4 +1,5 @@
 import networkx
+import math
 
 class FeedForward(object):
     def __init__(self):
@@ -7,8 +8,8 @@ class FeedForward(object):
         self.network = networkx.DiGraph()
 
     def add_node(self, name, activation_name, inputs=None, outputs=None):
-        self.network.add_node(name)
-        self.network[name]['activation_function'] = self._activation_function_factory(activation_name)
+        self.network.add_node(name, activation_function=self._activation_function_factory(activation_name))
+        # self.network[name]['activation_function'] = self._activation_function_factory(activation_name)
         if inputs is not None:
             [self.network.add_edge(i, name, w=self._get_default_edge_weight()) for i in inputs]
         if outputs is not None:
@@ -22,10 +23,13 @@ class FeedForward(object):
             return lambda x:x
         if name == 'heaviside':
             return lambda  x: 1 if x >= 0 else 0
-        # TODO: Add sigmoid, arctan,
+        if name == 'logistic':
+            return lambda x: 1.0/(1.0 + math.exp(-x))
+        if name == 'none':
+            return lambda x: None
 
     def set_edge_weight(self, a, b, weight):
-        self.network.edge[a][b]['w'] = weight
+        self.network.add_edge(a,b,w=weight)
 
     def get_edge_weight(self, a, b):
         return self.network[a][b]['w']
@@ -41,7 +45,7 @@ class FeedForward(object):
         input_nodes = self.network.predecessors(node)
         input_weights_and_values = [(self.get_edge_weight(i,node), self._calculate_node_value(i, known_node_values)) for i in input_nodes]
         summed_inputs = sum(w*i for w, i in input_weights_and_values)
-        return self.network[node]['activation_function'](summed_inputs)
+        return self.network.node[node]['activation_function'](summed_inputs)
 
 def test_calculate_node_single_layer():
     net = FeedForward()
