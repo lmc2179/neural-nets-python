@@ -28,6 +28,12 @@ class FeedForward(object):
         if name == 'none':
             return lambda x: None
 
+    def _logistic(self, x):
+        return 1.0/(1.0 + math.exp(-x))
+
+    def _logistic_derivative(self, x):
+        return self._logistic(x) * (1 - self._logistic(x))
+
     def set_edge_weight(self, a, b, weight):
         self.network.add_edge(a,b,w=weight)
 
@@ -39,13 +45,19 @@ class FeedForward(object):
         output_vector = [self._calculate_node_value(o, known_node_values) for o in self.network_outputs]
         return output_vector
 
+
     def _calculate_node_value(self, node, known_node_values):
         if node in known_node_values:
             return known_node_values[node]
-        input_nodes = self.network.predecessors(node)
-        input_weights_and_values = [(self.get_edge_weight(i,node), self._calculate_node_value(i, known_node_values)) for i in input_nodes]
-        summed_inputs = sum(w*i for w, i in input_weights_and_values)
+        summed_inputs = self._get_neuron_summed_inputs(known_node_values, node)
         return self.network.node[node]['activation_function'](summed_inputs)
+
+    def _get_neuron_summed_inputs(self, node, known_node_values):
+        input_nodes = self.network.predecessors(node)
+        input_weights_and_values = [(self.get_edge_weight(i, node), self._calculate_node_value(i, known_node_values))
+                                    for i in input_nodes]
+        summed_inputs = sum(w * i for w, i in input_weights_and_values)
+        return summed_inputs
 
 def test_calculate_node_single_layer():
     net = FeedForward()
