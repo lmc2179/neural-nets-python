@@ -10,6 +10,6 @@ It is currently quite sparse. The following classes have been implemented:
 2. single_layer.py:
   * SingleLayerOnline: Single-layer, feedforward networks with a learning rule (Abstract).
   * Perceptron: The famous two-class [Perceptron](http://en.wikipedia.org/wiki/Perceptron)
-  * Winnow: Littlestone's [Winnow algorithm](http://en.wikipedia.org/wiki/Winnow_(algorithm) for binary features.
+  * Winnow: Littlestone's [Winnow algorithm](http://en.wikipedia.org/wiki/Winnow_(algorithm)) for binary features.
 3. multilayer_perceptron.py
   * Multilayer: Feed-forward multilayer perceptron with sigmoidal hidden unit activation functions (Abstract)
